@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react"; // Import useEffect and useState
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@chakra-ui/react";
-import FormWrapper from "./FormWrapper"; // Corrected name
+import FormWrapper from "./FormWrapper";
 import { IFormInputProps } from "@src/interface/forms";
 import ReactSelect, { Props } from "react-select";
 
@@ -8,8 +8,8 @@ interface IFormSelectProps
   extends Omit<IFormInputProps, "inputProps" | "type" | "onChange" | "onBlur"> {
   options: { label: string; value: string }[];
   selectProps?: Props;
-  onChange?: (name: string, value: string | undefined) => void; // Enhanced typing
-  onBlur?: (name: string, isTouched: boolean) => void; // Enhanced typing
+  onChange?: (name: string, value: string | undefined) => void;
+  onBlur?: (name: string, isTouched: boolean) => void;
 }
 
 const FormSelect: React.FC<IFormSelectProps> = ({
@@ -28,13 +28,14 @@ const FormSelect: React.FC<IFormSelectProps> = ({
   options,
 }) => {
   const theme = useTheme();
-  const [isMounted, setIsMounted] = useState(false); // Add state to track mount status
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true); // Set mounted to true on component mount
+    setIsMounted(true);
   }, []);
 
-  const handleChange = (selectedOption: { value: string }) => {
+  const handleChange = (newValue: any) => {
+    const selectedOption = newValue as { value: string } | null;
     onChange && onChange(name, selectedOption?.value);
   };
 
@@ -43,23 +44,25 @@ const FormSelect: React.FC<IFormSelectProps> = ({
   };
 
   if (!isMounted) {
-    return null; // Prevent rendering until mounted
+    return null;
   }
+
+  const isTouched = Boolean(touched && typeof touched === "object"); // Ensure touched is properly handled
 
   return (
     <FormWrapper
-      isInvalid={Boolean(error && touched)}
+      isInvalid={Boolean(error && isTouched)}
       wrapperProps={wrapperProps}
       helperText={helperText}
       label={label}
       error={error as string}
-      touched={touched}
+      touched={isTouched}
     >
       <ReactSelect
         name={name}
         placeholder={placeholder}
         value={options.find((item) => item.value === value)}
-        onChange={handleChange}
+        onChange={handleChange} // Updated handler
         onBlur={handleBlur}
         options={options}
         styles={{
