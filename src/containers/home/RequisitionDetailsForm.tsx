@@ -15,7 +15,7 @@ const RequisitionDetailsForm: React.FC<{
   const formik = useFormik<IRequisitionDetails>({
     initialValues: {
       requisitionTitle: "",
-      noOfOpenings: "",
+      noOfOpenings: 0, // Must be a number
       urgency: "",
       gender: "",
     },
@@ -37,15 +37,15 @@ const RequisitionDetailsForm: React.FC<{
   });
 
   // Handler to update form values
-  const handleChange = useCallback((field: string, value: any) => {
-    formik.setFieldValue(field, value);
-    onFormChange({ ...formik.values, [field]: value });
-  }, [formik.values, onFormChange]);
-
-  // Call onFormChange whenever form values change
-  React.useEffect(() => {
-    onFormChange(formik.values);
-  }, [formik.values, onFormChange]);
+  const handleChange = useCallback(
+    (field: string, value: any) => {
+      console.log(`Updating ${field}:`, value); // Debug log
+      formik.setFieldValue(field, value);
+      onFormChange({ ...formik.values, [field]: value });
+    },
+    [formik.values, onFormChange]
+  );
+  
 
   return (
     <Box width="100%" as="form" onSubmit={formik.handleSubmit}>
@@ -65,7 +65,7 @@ const RequisitionDetailsForm: React.FC<{
           placeholder="Enter number of openings"
           name="noOfOpenings"
           type="number"
-          onChange={(e) => handleChange("noOfOpenings", parseFloat(e.target.value) || 0)} // Use parseFloat for number input
+          onChange={(e) => handleChange("noOfOpenings", parseFloat(e.target.value) || 0)} // Parse input to number
           onBlur={formik.handleBlur}
           value={formik.values.noOfOpenings}
           error={formik.errors.noOfOpenings}
@@ -91,7 +91,6 @@ const RequisitionDetailsForm: React.FC<{
           onBlur={() => formik.setFieldTouched("urgency")}
           error={formik.errors.urgency}
           touched={formik.touched.urgency}
-          value={formik.values.urgency}
         />
         <Flex w="100%" justify="flex-end" mt="4rem">
           <Button colorScheme="red" type="submit" isDisabled={!formik.isValid || formik.isSubmitting}>

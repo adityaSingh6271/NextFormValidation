@@ -1,24 +1,30 @@
 import React, { useState } from "react";
-import RequisitionDetailsForm from "./RequisitionDetailsForm";
-import PreviewCard from "./PreviewCard";
-import { IRequisitionDetails } from "../../interface/forms";
+import RequisitionDetailsForm from "./home/RequisitionDetailsForm";
+import PreviewCard from "./home/PreviewCard";
+import { IRequisitionDetails } from "../interface/forms";
 import { Box } from "@chakra-ui/react";
 
 const ParentComponent: React.FC = () => {
   const [formValues, setFormValues] = useState<IRequisitionDetails>({
     requisitionTitle: "",
-    noOfOpenings: "",
+    noOfOpenings: 0,
     urgency: "",
     gender: "",
   });
 
   const handleFormChange = (values: IRequisitionDetails) => {
-    setFormValues(values); // Update the state with the form values
+    console.log("Form Values Updating:", values); // Track real-time updates
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      ...values, // Ensure all form values are kept in sync
+    }));
   };
 
   const handleTab = (n: number) => {
     console.log("Changing to tab:", n);
   };
+
+  console.log("Form Values in ParentComponent:", formValues); // Ensure formValues are updating
 
   return (
     <Box>
