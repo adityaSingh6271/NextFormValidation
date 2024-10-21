@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-}
+  trailingSlash: true, // Add this line for static exports
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
