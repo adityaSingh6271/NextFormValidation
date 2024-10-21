@@ -14,7 +14,7 @@ const FormInput = React.forwardRef<HTMLInputElement, IFormInputProps>(
       onChange,
       onBlur,
       error,
-      touched,
+      touched = false, // Ensure touched is boolean and defaults to false
       inputProps = {},
       children,
       helperText,
@@ -46,11 +46,11 @@ const FormInput = React.forwardRef<HTMLInputElement, IFormInputProps>(
 
     return (
       <FormWrapper
-        isInvalid={Boolean(error && touched)}
+        isInvalid={!!error && !!touched} // Ensure touched and error are valid boolean values
         wrapperProps={wrapperProps}
         helperText={helperText}
         label={label}
-        touched={touched}
+        touched={!!touched} // Convert touched to boolean
         error={error as string}
       >
         <Input
